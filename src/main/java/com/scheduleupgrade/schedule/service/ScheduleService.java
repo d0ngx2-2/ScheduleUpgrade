@@ -3,6 +3,8 @@ package com.scheduleupgrade.schedule.service;
 import com.scheduleupgrade.schedule.dto.*;
 import com.scheduleupgrade.schedule.entity.Schedule;
 import com.scheduleupgrade.schedule.repository.ScheduleRepository;
+import com.scheduleupgrade.user.entity.User;
+import com.scheduleupgrade.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     //일정 생성
     @Transactional
     public ScheduleCreateResponse save(ScheduleCreateRequest request) {
-        Schedule schedule = new Schedule(request.getUserName(), request.getTitle(), request.getContent());
+        User user = userRepository.findById(request.getUserId()).orElseThrow(
+                ()-> new IllegalArgumentException("존재하지않는 유저입니다.")
+        );
+
+        Schedule schedule = new Schedule(user, request.getTitle(), request.getContent());
         Schedule saveSchedule = scheduleRepository.save(schedule);
         return new ScheduleCreateResponse(
                 saveSchedule.getId(),
-                saveSchedule.getUserName(),
+                saveSchedule.getUser().getUserName(),
                 saveSchedule.getTitle(),
                 saveSchedule.getContent(),
                 saveSchedule.getCreatedDate(),
@@ -37,7 +44,7 @@ public class ScheduleService {
         List<GetAllScheduleResponse> dtos = new ArrayList<>();
         for (Schedule schedule : schedules) {
             GetAllScheduleResponse dto = new GetAllScheduleResponse(
-                    schedule.getUserName(),
+                    schedule.getUser().getUserName(),
                     schedule.getTitle(),
                     schedule.getCreatedDate(),
                     schedule.getLastModifiedDate()
@@ -55,7 +62,7 @@ public class ScheduleService {
         );
         return new GetScheduleResponse(
                 schedule.getId(),
-                schedule.getUserName(),
+                schedule.getUser().getUserName(),
                 schedule.getTitle(),
                 schedule.getContent(),
                 schedule.getCreatedDate(),
