@@ -8,7 +8,7 @@ public class SessionUser {
     private final String userName;
     private final String email;
 
-    public SessionUser(Long id, String userName, String email, String password) {
+    public SessionUser(Long id, String userName, String email) {
         this.id = id;
         this.userName = userName;
         this.email = email;

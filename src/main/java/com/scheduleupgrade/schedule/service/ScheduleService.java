@@ -20,8 +20,8 @@ public class ScheduleService {
 
     //일정 생성
     @Transactional
-    public ScheduleCreateResponse save(ScheduleCreateRequest request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(
+    public ScheduleCreateResponse save(ScheduleCreateRequest request, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("존재하지않는 유저입니다.")
         );
 

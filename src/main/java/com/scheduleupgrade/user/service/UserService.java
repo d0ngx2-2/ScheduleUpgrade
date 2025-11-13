@@ -45,8 +45,8 @@ public class UserService {
         if(!user.getPassword().equals(request.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 올바르지 않습니다.");
         }
-
-        session.setAttribute("userId", user.getId());
+        SessionUser sessionUser = new SessionUser(user.getId(), user.getUserName(), user.getEmail());
+        session.setAttribute("loginUser", sessionUser);
     }
 
     //로그아웃 기능
