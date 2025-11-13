@@ -1,5 +1,6 @@
 package com.scheduleupgrade.user.service;
 
+import com.scheduleupgrade.schedule.repository.ScheduleRepository;
 import com.scheduleupgrade.user.dto.*;
 import com.scheduleupgrade.user.entity.User;
 import com.scheduleupgrade.user.repository.UserRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final ScheduleRepository scheduleRepository;
 
     //회원가입 기능
     @Transactional
@@ -128,6 +130,8 @@ public class UserService {
         if (!user.getId().equals(loginUserId)) {
             throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
         }
+
+        scheduleRepository.deleteAllByUser(user);
         userRepository.deleteById(userId);
     }
 }

@@ -76,7 +76,7 @@ public class ScheduleService {
                 () -> new IllegalArgumentException("없는 일정입니다.")
         );
 
-        if (!schedule.getId().equals(loginUserId)) {
+        if (!schedule.getUser().getId().equals(loginUserId)) {
             throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
         }
 
@@ -93,7 +93,7 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalArgumentException("없는 일정입니다.")
         );
-        if (!schedule.getId().equals(loginUserId)) {
+        if (!schedule.getUser().getId().equals(loginUserId)) {
             throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
         }
 
