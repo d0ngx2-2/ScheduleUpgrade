@@ -31,12 +31,12 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(scheduleId));
     }
     //일정 수정
-    @PutMapping("/schedule/{scheduleId}")
+    @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> update(@PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request));
     }
     //일정 삭제
-    @DeleteMapping("/schedule/{scheduleId}")
+    @DeleteMapping("/schedules/{scheduleId}")
     public ResponseEntity<Void> delete(@PathVariable Long scheduleId){
         scheduleService.delete(scheduleId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

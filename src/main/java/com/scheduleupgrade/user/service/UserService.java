@@ -3,9 +3,12 @@ package com.scheduleupgrade.user.service;
 import com.scheduleupgrade.user.dto.*;
 import com.scheduleupgrade.user.entity.User;
 import com.scheduleupgrade.user.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +18,13 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    //생성 기능
+    //회원가입 기능
     @Transactional
     public CreateUserResponse save(CreateUserRequest request) {
+        if(userRepository.existsByEmail(request.getEmail())){
+            throw new IllegalArgumentException(("이미 존재하는 이메일 입니다."));
+        }
+
         User user = new User(request.getUserName(), request.getEmail(), request.getPassword());
         User savedUser = userRepository.save(user);
         return new CreateUserResponse(
@@ -27,6 +34,25 @@ public class UserService {
                 savedUser.getCreatedDate(),
                 savedUser.getLastModifiedDate()
         );
+    }
+
+    //로그인 기능
+    @Transactional(readOnly = true)
+    public void login(UserLoginRequest request, HttpSession session) {
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 올바르지 않습니다.")
+        );
+        if(!user.getPassword().equals(request.getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 올바르지 않습니다.");
+        }
+
+        session.setAttribute("userId", user.getId());
+    }
+
+    //로그아웃 기능
+    @Transactional
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 
     //전체 조회 기능
