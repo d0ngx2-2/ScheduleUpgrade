@@ -23,19 +23,23 @@ public class UserController {
 
     //로그인 기능
     @PostMapping("/users/login")
-    public ResponseEntity<Void> login(@RequestBody UserLoginRequest request, HttpSession session) {
-        userService.login(request,session);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request, HttpSession session) {
+        UserLoginResponse userLoginResponse = userService.login(request);
+
+        SessionUser sessionUser = new SessionUser(userLoginResponse.getId(), userLoginResponse.getUserName(), userLoginResponse.getEmail());
+        session.setAttribute("loginUser", sessionUser);
+
+        return ResponseEntity.ok(userLoginResponse);
     }
 
     //로그아웃 기능
     @PostMapping("/users/logout")
     public ResponseEntity<Void> logout(@SessionAttribute(name = "loginUser", required = false)SessionUser sessionUser, HttpSession session) {
-        if(sessionUser != null) {
+        if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         userService.logout(session);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     //전체 조회 기능
@@ -52,24 +56,21 @@ public class UserController {
 
     //수정 기능
     @PutMapping("/users/{userId}")
-    public ResponseEntity<UpdateUserResponse> updateUser(@SessionAttribute SessionUser sessionUser, @PathVariable Long userId, @RequestBody UpdateUserRequest request) {
-        if(sessionUser != null) {
+    public ResponseEntity<UpdateUserResponse> updateUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @RequestBody UpdateUserRequest request) {
+        if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }else if(!sessionUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(userService.update(userId, request));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.update(userId, request, sessionUser.getId()));
     }
 
     //삭제 기능
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@SessionAttribute SessionUser sessionUser, @PathVariable Long userId) {
-        if(sessionUser != null) {
+    public ResponseEntity<Void> deleteUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @RequestBody DeleteUserRequest request) {
+        if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if(!sessionUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        userService.delete(userId);
+
+        userService.delete(userId, request.getPassword(),  sessionUser.getId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

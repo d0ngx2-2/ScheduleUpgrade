@@ -18,7 +18,7 @@ public class ScheduleController {
 
     //일정 생성
     @PostMapping("/schedules")
-    public ResponseEntity<ScheduleCreateResponse> create(@SessionAttribute SessionUser sessionUser, @RequestBody ScheduleCreateRequest request) {
+    public ResponseEntity<ScheduleCreateResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @RequestBody ScheduleCreateRequest request) {
         if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -36,23 +36,19 @@ public class ScheduleController {
     }
     //일정 수정
     @PutMapping("/schedules/{scheduleId}")
-    public ResponseEntity<UpdateScheduleResponse> update(@SessionAttribute SessionUser sessionUser, @PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request){
+    public ResponseEntity<UpdateScheduleResponse> update(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request){
         if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } else if(scheduleId.equals(scheduleService.getOne(scheduleId).getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request));
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request, sessionUser.getId()));
     }
     //일정 삭제
     @DeleteMapping("/schedules/{scheduleId}")
-    public ResponseEntity<Void> delete(@SessionAttribute SessionUser sessionUser, @PathVariable Long scheduleId){
+    public ResponseEntity<Void> delete(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long scheduleId){
         if (sessionUser == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }else if(scheduleId.equals(scheduleService.getOne(scheduleId).getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        scheduleService.delete(scheduleId);
+        scheduleService.delete(scheduleId,  sessionUser.getId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

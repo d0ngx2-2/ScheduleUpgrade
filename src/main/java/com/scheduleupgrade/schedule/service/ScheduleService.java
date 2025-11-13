@@ -71,10 +71,14 @@ public class ScheduleService {
     }
     //일정 수정
     @Transactional
-    public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request) {
+    public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request, Long loginUserId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalArgumentException("없는 일정입니다.")
         );
+
+        if (!schedule.getId().equals(loginUserId)) {
+            throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
+        }
 
         schedule.update(request.getTitle(), request.getContent());
         return new UpdateScheduleResponse(
@@ -85,11 +89,14 @@ public class ScheduleService {
     }
     //일정 삭제
     @Transactional
-    public void delete(Long scheduleId) {
-        boolean existence = scheduleRepository.existsById(scheduleId);
-        if (!existence) {
-            throw new IllegalArgumentException("없는 일정입니다.");
+    public void delete(Long scheduleId, Long loginUserId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalArgumentException("없는 일정입니다.")
+        );
+        if (!schedule.getId().equals(loginUserId)) {
+            throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
         }
+
         scheduleRepository.deleteById(scheduleId);
     }
 }
