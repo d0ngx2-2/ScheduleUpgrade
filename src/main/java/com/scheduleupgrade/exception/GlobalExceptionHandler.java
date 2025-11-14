@@ -26,9 +26,11 @@ public class GlobalExceptionHandler {
     // @Valid 실패 처리 (Validation 예외)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
-            MethodArgumentNotValidException ex, HttpServletRequest request
+            MethodArgumentNotValidException ex
     ) {
-        String message = ex.getBindingResult().getFieldError().getDefaultMessage();
+        String message = "유효성 검사에 실패하였습니다.";
+        if(ex.getBindingResult().getFieldError() != null ) {}
+        message = ex.getBindingResult().getFieldError().getDefaultMessage();
 
         ErrorResponse response = ErrorResponse.builder()
                 .status(400)
@@ -37,6 +39,19 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.badRequest().body(response);
+
+    }
+
+    // 그 외 예외 (안정망)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        ErrorResponse response = ErrorResponse.builder()
+                .status(500)
+                .error("INTERNAL_SERVER_ERROR")
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.internalServerError().body(response);
     }
 
 }

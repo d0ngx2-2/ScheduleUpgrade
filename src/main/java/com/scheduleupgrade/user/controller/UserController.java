@@ -1,5 +1,7 @@
 package com.scheduleupgrade.user.controller;
 
+import com.scheduleupgrade.exception.CustomException;
+import com.scheduleupgrade.exception.ErrorCode;
 import com.scheduleupgrade.user.dto.*;
 import com.scheduleupgrade.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -37,7 +39,7 @@ public class UserController {
     @PostMapping("/users/logout")
     public ResponseEntity<Void> logout(@SessionAttribute(name = "loginUser", required = false)SessionUser sessionUser, HttpSession session) {
         if(sessionUser == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
         userService.logout(session);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -59,7 +61,7 @@ public class UserController {
     @PutMapping("/users/{userId}")
     public ResponseEntity<UpdateUserResponse> updateUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
         if(sessionUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
         return ResponseEntity.status(HttpStatus.OK).body(userService.update(userId, request, sessionUser.getId()));
     }
@@ -68,7 +70,7 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @Valid @RequestBody DeleteUserRequest request) {
         if(sessionUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
 
         userService.delete(userId, request.getPassword(),  sessionUser.getId());

@@ -1,5 +1,7 @@
 package com.scheduleupgrade.schedule.controller;
 
+import com.scheduleupgrade.exception.CustomException;
+import com.scheduleupgrade.exception.ErrorCode;
 import com.scheduleupgrade.schedule.dto.*;
 import com.scheduleupgrade.schedule.service.ScheduleService;
 import com.scheduleupgrade.user.dto.SessionUser;
@@ -21,7 +23,7 @@ public class ScheduleController {
     @PostMapping("/schedules")
     public ResponseEntity<ScheduleCreateResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @Valid  @RequestBody ScheduleCreateRequest request) {
         if(sessionUser == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(request, sessionUser.getId()));
     }
@@ -39,7 +41,7 @@ public class ScheduleController {
     @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> update(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long scheduleId, @Valid @RequestBody UpdateScheduleRequest request){
         if(sessionUser == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request, sessionUser.getId()));
     }
@@ -47,7 +49,7 @@ public class ScheduleController {
     @DeleteMapping("/schedules/{scheduleId}")
     public ResponseEntity<Void> delete(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long scheduleId){
         if (sessionUser == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
         scheduleService.delete(scheduleId,  sessionUser.getId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

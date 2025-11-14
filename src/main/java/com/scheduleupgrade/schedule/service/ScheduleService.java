@@ -1,5 +1,7 @@
 package com.scheduleupgrade.schedule.service;
 
+import com.scheduleupgrade.exception.CustomException;
+import com.scheduleupgrade.exception.ErrorCode;
 import com.scheduleupgrade.schedule.dto.*;
 import com.scheduleupgrade.schedule.entity.Schedule;
 import com.scheduleupgrade.schedule.repository.ScheduleRepository;
@@ -22,7 +24,7 @@ public class ScheduleService {
     @Transactional
     public ScheduleCreateResponse save(ScheduleCreateRequest request, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                ()-> new IllegalArgumentException("존재하지않는 유저입니다.")
+                ()-> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
         Schedule schedule = new Schedule(user, request.getTitle(), request.getContent());
@@ -58,7 +60,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public GetScheduleResponse getOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalArgumentException("없는 일정입니다.")
+                () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
         return new GetScheduleResponse(
                 schedule.getId(),
@@ -73,11 +75,11 @@ public class ScheduleService {
     @Transactional
     public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request, Long loginUserId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalArgumentException("없는 일정입니다.")
+                () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
 
         if (!schedule.getUser().getId().equals(loginUserId)) {
-            throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
+            throw new CustomException(ErrorCode.SCHEDULE_FORBIDDEN);
         }
 
         schedule.update(request.getTitle(), request.getContent());
@@ -91,10 +93,10 @@ public class ScheduleService {
     @Transactional
     public void delete(Long scheduleId, Long loginUserId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalArgumentException("없는 일정입니다.")
+                () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
         if (!schedule.getUser().getId().equals(loginUserId)) {
-            throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
+            throw new CustomException(ErrorCode.SCHEDULE_FORBIDDEN);
         }
 
         scheduleRepository.deleteById(scheduleId);

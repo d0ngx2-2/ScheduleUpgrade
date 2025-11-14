@@ -1,5 +1,7 @@
 package com.scheduleupgrade.user.service;
 
+import com.scheduleupgrade.exception.CustomException;
+import com.scheduleupgrade.exception.ErrorCode;
 import com.scheduleupgrade.schedule.repository.ScheduleRepository;
 import com.scheduleupgrade.user.dto.*;
 import com.scheduleupgrade.user.entity.User;
@@ -23,7 +25,7 @@ public class UserService {
     @Transactional
     public CreateUserResponse save(CreateUserRequest request) {
         if(userRepository.existsByEmail(request.getEmail())){
-            throw new IllegalArgumentException(("이미 존재하는 이메일 입니다."));
+            throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
         User user = new User(request.getUserName(), request.getEmail(), request.getPassword());
@@ -44,7 +46,7 @@ public class UserService {
                 () -> new IllegalArgumentException("이메일이 올바르지 않습니다.")
         );
         if(!user.getPassword().equals(request.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
         return new UserLoginResponse(
                 user.getId(),
@@ -82,7 +84,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public GetOneUserResponse getOne(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
         return new GetOneUserResponse(
                 user.getId(),
@@ -97,14 +99,14 @@ public class UserService {
     @Transactional
     public UpdateUserResponse update(Long userId, UpdateUserRequest request, Long loginUserId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
         if (!user.getId().equals(loginUserId)) {
-            throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
+            throw new CustomException(ErrorCode.USER_FORBIDDEN);
         }
 
         if(!user.getPassword().equals(request.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         user.update(request.getUserName(), request.getEmail());
@@ -121,13 +123,13 @@ public class UserService {
     @Transactional
     public void delete(Long userId, String password, Long loginUserId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
         if (!user.getId().equals(loginUserId)) {
-            throw new IllegalArgumentException("해당 유저의 권한은 없습니다.");
+            throw new CustomException(ErrorCode.USER_FORBIDDEN);
         }
 
         scheduleRepository.deleteAllByUser(user);
