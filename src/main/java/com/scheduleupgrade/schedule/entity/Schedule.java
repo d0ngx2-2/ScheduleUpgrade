@@ -21,7 +21,9 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, length = 10)
     private String title;
+    @Column(nullable = false, length = 50)
     private String content;
     @CreatedDate
     private LocalDateTime createdDate;

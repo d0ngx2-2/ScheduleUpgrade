@@ -3,6 +3,7 @@ package com.scheduleupgrade.schedule.controller;
 import com.scheduleupgrade.schedule.dto.*;
 import com.scheduleupgrade.schedule.service.ScheduleService;
 import com.scheduleupgrade.user.dto.SessionUser;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ScheduleController {
 
     //일정 생성
     @PostMapping("/schedules")
-    public ResponseEntity<ScheduleCreateResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @RequestBody ScheduleCreateRequest request) {
+    public ResponseEntity<ScheduleCreateResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @Valid  @RequestBody ScheduleCreateRequest request) {
         if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -36,7 +37,7 @@ public class ScheduleController {
     }
     //일정 수정
     @PutMapping("/schedules/{scheduleId}")
-    public ResponseEntity<UpdateScheduleResponse> update(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long scheduleId, @RequestBody UpdateScheduleRequest request){
+    public ResponseEntity<UpdateScheduleResponse> update(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long scheduleId, @Valid @RequestBody UpdateScheduleRequest request){
         if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

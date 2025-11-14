@@ -3,6 +3,7 @@ package com.scheduleupgrade.user.controller;
 import com.scheduleupgrade.user.dto.*;
 import com.scheduleupgrade.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,13 @@ public class UserController {
 
     //회원가입 기능
     @PostMapping("/users/signup")
-    public ResponseEntity<CreateUserResponse> saveUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<CreateUserResponse> saveUser(@Valid @RequestBody CreateUserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(request));
     }
 
     //로그인 기능
     @PostMapping("/users/login")
-    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request, HttpSession session) {
+    public ResponseEntity<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest request, HttpSession session) {
         UserLoginResponse userLoginResponse = userService.login(request);
 
         SessionUser sessionUser = new SessionUser(userLoginResponse.getId(), userLoginResponse.getUserName(), userLoginResponse.getEmail());
@@ -56,7 +57,7 @@ public class UserController {
 
     //수정 기능
     @PutMapping("/users/{userId}")
-    public ResponseEntity<UpdateUserResponse> updateUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<UpdateUserResponse> updateUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
         if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -65,7 +66,7 @@ public class UserController {
 
     //삭제 기능
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @RequestBody DeleteUserRequest request) {
+    public ResponseEntity<Void> deleteUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @Valid @RequestBody DeleteUserRequest request) {
         if(sessionUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
