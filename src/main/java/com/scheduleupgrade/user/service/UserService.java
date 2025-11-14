@@ -1,5 +1,6 @@
 package com.scheduleupgrade.user.service;
 
+import com.scheduleupgrade.config.PasswordEncoder;
 import com.scheduleupgrade.exception.CustomException;
 import com.scheduleupgrade.exception.ErrorCode;
 import com.scheduleupgrade.schedule.repository.ScheduleRepository;
@@ -20,6 +21,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     //회원가입 기능
     @Transactional
@@ -28,7 +30,8 @@ public class UserService {
             throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
-        User user = new User(request.getUserName(), request.getEmail(), request.getPassword());
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        User user = new User(request.getUserName(), request.getEmail(), encodedPassword);
         User savedUser = userRepository.save(user);
         return new CreateUserResponse(
                 savedUser.getId(),
@@ -43,9 +46,9 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserLoginResponse login(UserLoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException("이메일이 올바르지 않습니다.")
+                () -> new CustomException(ErrorCode.INVALID_EMAIL_INPUT)
         );
-        if(!user.getPassword().equals(request.getPassword())){
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
         return new UserLoginResponse(
@@ -105,7 +108,7 @@ public class UserService {
             throw new CustomException(ErrorCode.USER_FORBIDDEN);
         }
 
-        if(!user.getPassword().equals(request.getPassword())){
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
@@ -125,7 +128,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
         if (!user.getId().equals(loginUserId)) {
