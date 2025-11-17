@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CreateUserResponse {
+
     private final long id;
     private final String userName;
     private final String email;

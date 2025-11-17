@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
 
     }
 
-    // 그 외 예외 (안정망)
+    // 나머지 예외 서버에러 처리
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         ErrorResponse response = ErrorResponse.builder()

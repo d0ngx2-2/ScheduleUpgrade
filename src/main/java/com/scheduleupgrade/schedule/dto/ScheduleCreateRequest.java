@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class ScheduleCreateRequest {
+
     @NotBlank(message = "제목을 입력해주세요.")
     @Size(min = 1, max = 10)
     private String title;

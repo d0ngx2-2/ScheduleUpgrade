@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class UpdateUserRequest {
+
     @NotBlank(message = "유저이름을 입력해 주세요.")
     @Size(min = 1, max = 5)
     private String userName;

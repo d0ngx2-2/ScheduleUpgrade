@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     //회원가입 기능

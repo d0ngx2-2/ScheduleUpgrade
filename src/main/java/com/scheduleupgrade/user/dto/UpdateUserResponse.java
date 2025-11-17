@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 @Getter
 public class UpdateUserResponse {
+
+
     private final Long id;
     private final String userName;
     private final String email;

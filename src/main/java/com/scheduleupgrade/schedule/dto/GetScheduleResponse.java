@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GetScheduleResponse {
+
     private final long id;
     private final String userName;
     private final String title;

@@ -5,5 +5,6 @@ import com.scheduleupgrade.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ScheduleRepository extends JpaRepository<Schedule,Long> {
+
     void deleteAllByUser(User user);
 }

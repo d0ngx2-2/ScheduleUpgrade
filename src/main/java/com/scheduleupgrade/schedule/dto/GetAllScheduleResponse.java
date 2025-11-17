@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GetAllScheduleResponse {
+
     private final String userName;
     private final String title;
     private final LocalDateTime createdDate;
