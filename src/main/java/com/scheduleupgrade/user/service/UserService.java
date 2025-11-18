@@ -1,5 +1,6 @@
 package com.scheduleupgrade.user.service;
 
+import com.scheduleupgrade.comment.repository.CommentRepository;
 import com.scheduleupgrade.config.PasswordEncoder;
 import com.scheduleupgrade.exception.CustomException;
 import com.scheduleupgrade.exception.ErrorCode;
@@ -23,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CommentRepository commentRepository;
 
     //회원가입 기능
     @Transactional
@@ -136,6 +138,7 @@ public class UserService {
             throw new CustomException(ErrorCode.USER_FORBIDDEN);
         }
 
+        commentRepository.deleteAllByUserId(userId);
         scheduleRepository.deleteAllByUser(user);
         userRepository.deleteById(userId);
     }

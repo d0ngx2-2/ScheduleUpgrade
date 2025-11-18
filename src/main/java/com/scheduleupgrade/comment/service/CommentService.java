@@ -26,6 +26,7 @@ public class CommentService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
 
+    //댓글 생성
     @Transactional
     public CreateCommentResponse createComment(CreateCommentRequest request, Long loginUserId, Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
@@ -48,13 +49,14 @@ public class CommentService {
         );
     }
 
+    //한 일정 댓글 전체 조회
     @Transactional(readOnly = true)
-    public List<GetCommentResponse> getAllContent(Long scheduleId) {
+    public List<GetCommentResponse> getAll(Long scheduleId) {
         scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
 
-        List<Comment> comments = commentRepository.findAllbyScheduleId(scheduleId);
+        List<Comment> comments = commentRepository.findAllByScheduleId(scheduleId);
         List<GetCommentResponse> dtos = new ArrayList<>();
         for (Comment comment : comments) {
             GetCommentResponse dto = new GetCommentResponse(
@@ -69,6 +71,7 @@ public class CommentService {
         return dtos;
     }
 
+    //댓글 수정
     @Transactional
     public UpdateCommentResponse updateComment(UpdateCommentRequest request, Long loginUserId, Long scheduleId) {
         Comment comment = commentRepository.findById(scheduleId).orElseThrow(
@@ -84,6 +87,7 @@ public class CommentService {
         return new UpdateCommentResponse(comment.getId(), comment.getContent());
     }
 
+    //댓글 삭제
     @Transactional
     public void deleteComment(Long loginUserId, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(

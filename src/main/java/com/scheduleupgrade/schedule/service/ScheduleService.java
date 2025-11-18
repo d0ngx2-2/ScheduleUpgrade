@@ -1,5 +1,6 @@
 package com.scheduleupgrade.schedule.service;
 
+import com.scheduleupgrade.comment.repository.CommentRepository;
 import com.scheduleupgrade.exception.CustomException;
 import com.scheduleupgrade.exception.ErrorCode;
 import com.scheduleupgrade.schedule.dto.*;
@@ -8,6 +9,10 @@ import com.scheduleupgrade.schedule.repository.ScheduleRepository;
 import com.scheduleupgrade.user.entity.User;
 import com.scheduleupgrade.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +25,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     //일정 생성
     @Transactional
@@ -72,6 +78,7 @@ public class ScheduleService {
                 schedule.getLastModifiedDate()
         );
     }
+
     //일정 수정
     @Transactional
     public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request, Long loginUserId) {
@@ -90,6 +97,7 @@ public class ScheduleService {
                 schedule.getContent()
         );
     }
+
     //일정 삭제
     @Transactional
     public void delete(Long scheduleId, Long loginUserId) {
@@ -100,6 +108,27 @@ public class ScheduleService {
             throw new CustomException(ErrorCode.SCHEDULE_FORBIDDEN);
         }
 
+        commentRepository.deleteAllByScheduleId(scheduleId);
+
         scheduleRepository.deleteById(scheduleId);
+    }
+
+    //일정 페이징 조회
+    public Page<GetPageScheduleResponse> getPage(Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()
+                , pageable.getPageSize()
+                , Sort.by(Sort.Direction.DESC, "lastModifiedDate")
+        );
+
+        Page<Schedule> schedules = scheduleRepository.findAll(pageRequest);
+
+        return schedules.map(schedule -> new GetPageScheduleResponse(
+                schedule.getUser().getUserName(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                commentRepository.countAllByScheduleId(schedule.getId()),     // 댓글 개수
+                schedule.getCreatedDate(),
+                schedule.getLastModifiedDate()
+        ));
     }
 }

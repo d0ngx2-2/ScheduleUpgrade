@@ -32,7 +32,7 @@ public class CommentController {
 
     @GetMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<List<GetCommentResponse>> getAllComments(@PathVariable Long scheduleId){
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllContent(scheduleId));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAll(scheduleId));
     }
 
     @PutMapping("/comments/{commentId}")
@@ -48,7 +48,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(request,sessionUser.getId(), commentId));
     }
 
-    @DeleteMapping("/comments/{commentId")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
             @PathVariable Long commentId
