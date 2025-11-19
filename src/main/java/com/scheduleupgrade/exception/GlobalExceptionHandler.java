@@ -29,7 +29,8 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException ex
     ) {
         String message = "유효성 검사에 실패하였습니다.";
-        if(ex.getBindingResult().getFieldError() != null ) {}
+        if (ex.getBindingResult().getFieldError() != null) {
+        }
         message = ex.getBindingResult().getFieldError().getDefaultMessage();
 
         ErrorResponse response = ErrorResponse.builder()
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.builder()
                 .status(500)
                 .error("INTERNAL_SERVER_ERROR")
-                .message(ex.getMessage())
+                .message("서버문제로 인해 실패하였습니다.")
                 .build();
 
         return ResponseEntity.internalServerError().body(response);

@@ -2,6 +2,7 @@ package com.scheduleupgrade.user.dto;
 
 import lombok.Getter;
 import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.LocalDateTime;
 
 @Getter

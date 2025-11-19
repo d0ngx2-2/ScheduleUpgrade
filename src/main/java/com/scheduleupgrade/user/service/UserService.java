@@ -29,7 +29,7 @@ public class UserService {
     //회원가입 기능
     @Transactional
     public CreateUserResponse save(CreateUserRequest request) {
-        if(userRepository.existsByEmail(request.getEmail())){
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
@@ -51,7 +51,7 @@ public class UserService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.INVALID_EMAIL_INPUT)
         );
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
         return new UserLoginResponse(
@@ -111,7 +111,7 @@ public class UserService {
             throw new CustomException(ErrorCode.USER_FORBIDDEN);
         }
 
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 

@@ -1,6 +1,7 @@
 package com.scheduleupgrade.schedule.service;
 
 import com.scheduleupgrade.comment.repository.CommentRepository;
+import com.scheduleupgrade.config.PasswordEncoder;
 import com.scheduleupgrade.exception.CustomException;
 import com.scheduleupgrade.exception.ErrorCode;
 import com.scheduleupgrade.schedule.dto.*;
@@ -26,17 +27,18 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     //일정 생성
     @Transactional
-    public ScheduleCreateResponse save(ScheduleCreateRequest request, Long userId) {
+    public CreateScheduleResponse save(CreateScheduleRequest request, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                ()-> new CustomException(ErrorCode.USER_NOT_FOUND)
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
         Schedule schedule = new Schedule(user, request.getTitle(), request.getContent());
         Schedule saveSchedule = scheduleRepository.save(schedule);
-        return new ScheduleCreateResponse(
+        return new CreateScheduleResponse(
                 saveSchedule.getId(),
                 saveSchedule.getUser().getUserName(),
                 saveSchedule.getTitle(),
@@ -65,11 +67,11 @@ public class ScheduleService {
 
     //선택 조회
     @Transactional(readOnly = true)
-    public GetScheduleResponse getOne(Long scheduleId) {
+    public GetOneScheduleResponse getOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
-        return new GetScheduleResponse(
+        return new GetOneScheduleResponse(
                 schedule.getId(),
                 schedule.getUser().getUserName(),
                 schedule.getTitle(),
@@ -81,13 +83,23 @@ public class ScheduleService {
 
     //일정 수정
     @Transactional
-    public UpdateScheduleResponse update(Long scheduleId, UpdateScheduleRequest request, Long loginUserId) {
+    public UpdateScheduleResponse update(Long scheduleId
+            , UpdateScheduleRequest request
+            , Long loginUserId
+            , String password
+    ) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
 
         if (!schedule.getUser().getId().equals(loginUserId)) {
             throw new CustomException(ErrorCode.SCHEDULE_FORBIDDEN);
+        }
+
+        User user = schedule.getUser();
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         schedule.update(request.getTitle(), request.getContent());
@@ -100,12 +112,18 @@ public class ScheduleService {
 
     //일정 삭제
     @Transactional
-    public void delete(Long scheduleId, Long loginUserId) {
+    public void delete(Long scheduleId, Long loginUserId, String password) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
         if (!schedule.getUser().getId().equals(loginUserId)) {
             throw new CustomException(ErrorCode.SCHEDULE_FORBIDDEN);
+        }
+
+        User user = schedule.getUser();
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         commentRepository.deleteAllByScheduleId(scheduleId);

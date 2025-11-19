@@ -13,4 +13,6 @@ public class UpdateScheduleRequest {
     @NotBlank(message = "내용을 입력해주세요.")
     @Size(min = 1, max = 50)
     private String content;
+    @NotBlank(message = "비밀번호를 입력해주세요.")
+    private String password;
 }

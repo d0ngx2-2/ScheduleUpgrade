@@ -24,8 +24,8 @@ public class ScheduleController {
 
     //일정 생성
     @PostMapping("/schedules")
-    public ResponseEntity<ScheduleCreateResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @Valid  @RequestBody ScheduleCreateRequest request) {
-        if(sessionUser == null) {
+    public ResponseEntity<CreateScheduleResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @Valid @RequestBody CreateScheduleRequest request) {
+        if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(request, sessionUser.getId()));
@@ -39,32 +39,37 @@ public class ScheduleController {
 
     //선택 일정 조회
     @GetMapping("/schedules/{scheduleId}")
-    public ResponseEntity<GetScheduleResponse> getSchedule(@PathVariable Long scheduleId) {
+    public ResponseEntity<GetOneScheduleResponse> getSchedule(@PathVariable Long scheduleId) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(scheduleId));
     }
 
     //일정 페이징 조회
     @GetMapping("/schedules")
-    public ResponseEntity<Page<GetPageScheduleResponse>> getPage(@PageableDefault(size = 10) Pageable pageable){
+    public ResponseEntity<Page<GetPageScheduleResponse>> getPage(@PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getPage(pageable));
     }
 
     //일정 수정
     @PutMapping("/schedules/{scheduleId}")
-    public ResponseEntity<UpdateScheduleResponse> update(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long scheduleId, @Valid @RequestBody UpdateScheduleRequest request){
-        if(sessionUser == null) {
+    public ResponseEntity<UpdateScheduleResponse> update(
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser
+            , @PathVariable Long scheduleId
+            , @Valid @RequestBody UpdateScheduleRequest request) {
+        if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request, sessionUser.getId()));
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request, sessionUser.getId(), request.getPassword()));
     }
 
     //일정 삭제
     @DeleteMapping("/schedules/{scheduleId}")
-    public ResponseEntity<Void> delete(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long scheduleId){
+    public ResponseEntity<Void> delete(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser
+            , @PathVariable Long scheduleId
+            , @RequestBody DeleteScheduleRequest request) {
         if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
-        scheduleService.delete(scheduleId,  sessionUser.getId());
+        scheduleService.delete(scheduleId, sessionUser.getId(), request.getPassword());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

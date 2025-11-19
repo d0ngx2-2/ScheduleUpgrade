@@ -3,6 +3,7 @@ package com.scheduleupgrade.comment.service;
 import com.scheduleupgrade.comment.dto.*;
 import com.scheduleupgrade.comment.entity.Comment;
 import com.scheduleupgrade.comment.repository.CommentRepository;
+import com.scheduleupgrade.config.PasswordEncoder;
 import com.scheduleupgrade.exception.CustomException;
 import com.scheduleupgrade.exception.ErrorCode;
 import com.scheduleupgrade.schedule.entity.Schedule;
@@ -25,10 +26,13 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     //댓글 생성
     @Transactional
-    public CreateCommentResponse createComment(CreateCommentRequest request, Long loginUserId, Long scheduleId) {
+    public CreateCommentResponse createComment(CreateCommentRequest request
+            , Long loginUserId
+            , Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
@@ -73,13 +77,22 @@ public class CommentService {
 
     //댓글 수정
     @Transactional
-    public UpdateCommentResponse updateComment(UpdateCommentRequest request, Long loginUserId, Long scheduleId) {
+    public UpdateCommentResponse updateComment(UpdateCommentRequest request
+            , Long loginUserId
+            , Long scheduleId
+            , String password) {
         Comment comment = commentRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
-        if(!comment.getUser().getId().equals(loginUserId)) {
+        if (!comment.getUser().getId().equals(loginUserId)) {
             throw new CustomException(ErrorCode.COMMENT_FORBIDDEN);
+        }
+
+        User user = comment.getUser();
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         comment.setContent(request.getContent());
@@ -89,13 +102,19 @@ public class CommentService {
 
     //댓글 삭제
     @Transactional
-    public void deleteComment(Long loginUserId, Long commentId) {
+    public void deleteComment(Long loginUserId, Long commentId, String password) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );
 
-        if(comment.getUser().getId().equals(loginUserId)) {
+        if (comment.getUser().getId().equals(loginUserId)) {
             throw new CustomException(ErrorCode.COMMENT_FORBIDDEN);
+        }
+
+        User user = comment.getUser();
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         commentRepository.delete(comment);

@@ -1,10 +1,11 @@
 package com.scheduleupgrade.schedule.dto;
 
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 @Getter
-public class ScheduleCreateResponse {
+public class CreateScheduleResponse {
 
     private final Long id;
     private final String userName;
@@ -13,7 +14,7 @@ public class ScheduleCreateResponse {
     private final LocalDateTime createdDate;
     private final LocalDateTime modifiedDate;
 
-    public ScheduleCreateResponse(Long id, String userName, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public CreateScheduleResponse(Long id, String userName, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.userName = userName;
         this.title = title;

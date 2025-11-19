@@ -1,6 +1,7 @@
 package com.scheduleupgrade.user.dto;
 
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 @Getter

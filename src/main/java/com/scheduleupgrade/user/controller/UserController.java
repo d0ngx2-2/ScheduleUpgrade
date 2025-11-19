@@ -38,8 +38,8 @@ public class UserController {
 
     //로그아웃 기능
     @PostMapping("/users/logout")
-    public ResponseEntity<Void> logout(@SessionAttribute(name = "loginUser", required = false)SessionUser sessionUser, HttpSession session) {
-        if(sessionUser == null) {
+    public ResponseEntity<Void> logout(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, HttpSession session) {
+        if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
         userService.logout(session);
@@ -61,7 +61,7 @@ public class UserController {
     //수정 기능
     @PutMapping("/users/{userId}")
     public ResponseEntity<UpdateUserResponse> updateUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
-        if(sessionUser == null) {
+        if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
         return ResponseEntity.status(HttpStatus.OK).body(userService.update(userId, request, sessionUser.getId()));
@@ -70,11 +70,11 @@ public class UserController {
     //삭제 기능
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @Valid @RequestBody DeleteUserRequest request) {
-        if(sessionUser == null) {
+        if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
 
-        userService.delete(userId, request.getPassword(),  sessionUser.getId());
+        userService.delete(userId, request.getPassword(), sessionUser.getId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
