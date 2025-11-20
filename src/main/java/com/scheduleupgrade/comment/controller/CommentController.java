@@ -21,12 +21,10 @@ public class CommentController {
 
     @PostMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<CreateCommentResponse> create(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @SessionAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable Long scheduleId,
             @Valid @RequestBody CreateCommentRequest request) {
-        if (sessionUser == null) {
-            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
-        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(request, sessionUser.getId(), scheduleId));
     }
 
@@ -37,26 +35,21 @@ public class CommentController {
 
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<UpdateCommentResponse> updateComment(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @SessionAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable Long commentId,
             @Valid @RequestBody UpdateCommentRequest request
     ) {
-        if (sessionUser == null) {
-            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
-        }
+
 
         return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(request, sessionUser.getId(), commentId, request.getPassword()));
     }
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @SessionAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable Long commentId,
             @Valid @RequestBody DeleteCommentRequest request
     ) {
-        if (sessionUser == null) {
-            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
-        }
 
         commentService.deleteComment(sessionUser.getId(), commentId, request.getPassword());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

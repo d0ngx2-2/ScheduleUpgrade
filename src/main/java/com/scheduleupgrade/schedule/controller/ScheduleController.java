@@ -24,11 +24,9 @@ public class ScheduleController {
 
     //일정 생성
     @PostMapping("/schedules")
-    public ResponseEntity<CreateScheduleResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+    public ResponseEntity<CreateScheduleResponse> create(@SessionAttribute(name = "loginUser") SessionUser sessionUser,
                                                          @Valid @RequestBody CreateScheduleRequest request) {
-        if (sessionUser == null) {
-            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
-        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(request, sessionUser.getId()));
     }
 
@@ -53,23 +51,19 @@ public class ScheduleController {
     //일정 수정
     @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> update(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @SessionAttribute(name = "loginUser") SessionUser sessionUser,
             @PathVariable Long scheduleId,
             @Valid @RequestBody UpdateScheduleRequest request) {
-        if (sessionUser == null) {
-            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
-        }
+
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(scheduleId, request, sessionUser.getId(), request.getPassword()));
     }
 
     //일정 삭제
     @DeleteMapping("/schedules/{scheduleId}")
-    public ResponseEntity<Void> delete(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+    public ResponseEntity<Void> delete(@SessionAttribute(name = "loginUser") SessionUser sessionUser,
                                        @PathVariable Long scheduleId,
                                        @RequestBody DeleteScheduleRequest request) {
-        if (sessionUser == null) {
-            throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
-        }
+
         scheduleService.delete(scheduleId, sessionUser.getId(), request.getPassword());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

@@ -44,7 +44,7 @@ public class ScheduleService {
                 saveSchedule.getTitle(),
                 saveSchedule.getContent(),
                 saveSchedule.getCreatedDate(),
-                saveSchedule.getLastModifiedDate()
+                saveSchedule.getModifiedDate()
         );
     }
 
@@ -58,7 +58,7 @@ public class ScheduleService {
                     schedule.getUser().getUserName(),
                     schedule.getTitle(),
                     schedule.getCreatedDate(),
-                    schedule.getLastModifiedDate()
+                    schedule.getModifiedDate()
             );
             dtos.add(dto);
         }
@@ -77,7 +77,7 @@ public class ScheduleService {
                 schedule.getTitle(),
                 schedule.getContent(),
                 schedule.getCreatedDate(),
-                schedule.getLastModifiedDate()
+                schedule.getModifiedDate()
         );
     }
 
@@ -147,7 +147,7 @@ public class ScheduleService {
                 schedule.getContent(),
                 commentRepository.countAllByScheduleId(schedule.getId()),     // 댓글 개수
                 schedule.getCreatedDate(),
-                schedule.getLastModifiedDate()
+                schedule.getModifiedDate()
         ));
     }
 }
