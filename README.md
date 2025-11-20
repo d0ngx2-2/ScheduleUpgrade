@@ -14,23 +14,21 @@
 ### **User API**
 
 #### 회원가입
-```http
+```json
 POST /users/signup
-Request
 ```
+Request
 
 ```json
-코드 복사
 {
   "userName": "test",
   "email": "test@test.com",
   "password": "1234"
 }
-Response
 ```
+Response
 
 ```json
-코드 복사
 {
   "id": 1,
   "userName": "test",
@@ -41,13 +39,12 @@ Response
 ```
 
 로그인
-```http
-코드 복사
-POST /users/login
-Request
-```
 ```json
-코드 복사
+
+POST /users/login
+```
+Request
+```json
 {
   "email": "test@test.com",
   "password": "1234"
@@ -56,7 +53,6 @@ Request
 Response
 
 ```json
-코드 복사
 {
   "id": 1,
   "userName": "test",
@@ -66,14 +62,13 @@ Response
 ```
 
 유저 조회
-```http
-코드 복사
+```json
 GET /users/{userId}
+```
 Response
 ```
 
 ```json
-코드 복사
 {
   "id": 1,
   "userName": "test",
@@ -84,13 +79,12 @@ Response
 ```
 Schedule API
 일정 생성
-```http
-코드 복사
-POST /schedules
-Request
-```
 ```json
-코드 복사
+POST /schedules
+```
+Request
+
+```json
 {
   "title": "회의",
   "content": "프로젝트 회의"
@@ -99,7 +93,6 @@ Request
 Response
 
 ```json
-코드 복사
 {
   "id": 1,
   "userName": "test",
@@ -111,13 +104,11 @@ Response
 ```
 
 전체 일정 조회
-```http
-코드 복사
-GET /schedules/all
-Response
-```
 ```json
-코드 복사
+GET /schedules/all
+```
+Response
+```json
 [
   {
     "userName": "test",
@@ -129,13 +120,12 @@ Response
 ```
 
 특정 일정 조회
-```http
-코드 복사
-GET /schedules/{scheduleId}
-Response
-```
 ```json
-코드 복사
+GET /schedules/{scheduleId}
+```
+Response
+
+```json
 {
   "id": 1,
   "userName": "test",
@@ -146,13 +136,13 @@ Response
 }
 ```
 일정 수정
-```http
-코드 복사
-PUT /schedules/{scheduleId}
-Request
-```
 ```json
-코드 복사
+
+PUT /schedules/{scheduleId}
+```
+Request
+
+```json
 {
   "title": "회의 수정",
   "content": "회의 내용 업데이트",
@@ -162,7 +152,6 @@ Request
 Response
 
 ```json
-코드 복사
 {
   "id": 1,
   "title": "회의 수정",
@@ -171,13 +160,12 @@ Response
 ```
 Comment API
 댓글 생성
-```http
-코드 복사
-POST /schedules/{scheduleId}/comments
-Request
-```
 ```json
-코드 복사
+POST /schedules/{scheduleId}/comments
+```
+Request
+
+```json
 {
   "content": "회의 시작 전 확인할 것"
 }
@@ -185,7 +173,6 @@ Request
 Response
 
 ```json
-코드 복사
 {
   "id": 1,
   "userName": "test",
@@ -196,13 +183,12 @@ Response
 ```
 
 댓글 조회
-```http
-코드 복사
-GET /schedules/{scheduleId}/comments
-Response
-```
 ```json
-코드 복사
+GET /schedules/{scheduleId}/comments
+```
+Response
+
+```json
 [
   {
     "id": 1,
@@ -215,13 +201,11 @@ Response
 ```
 
 댓글 수정
-```http
-코드 복사
-PUT /comments/{commentId}
-Request
-```
 ```json
-코드 복사
+PUT /comments/{commentId}
+```
+Request
+```json
 {
   "content": "회의 시작 전 확인 완료",
   "password": "1234"
@@ -230,7 +214,6 @@ Request
 Response
 
 ```json
-코드 복사
 {
   "id": 1,
   "content": "회의 시작 전 확인 완료"
@@ -238,13 +221,12 @@ Response
 ```
 
 댓글 삭제
-```http
-코드 복사
-DELETE /comments/{commentId}
-Request
-```
 ```json
-코드 복사
+DELETE /comments/{commentId}
+```
+Request
+
+```json
 {
   "password": "1234"
 }
