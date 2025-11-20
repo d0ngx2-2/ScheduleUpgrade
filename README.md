@@ -2,7 +2,7 @@
 
 ## ERD
 
-
+![project_ERD.png](project_ERD.png)
 > 🔹 User 1:N Schedule  
 > 🔹 Schedule 1:N Comment  
 > 🔹 User 1:N Comment
@@ -11,9 +11,9 @@
 
 ## Postman API 예시
 
-### **User API**
+## **User API**
 
-#### 회원가입
+### 회원가입
 ```json
 POST /users/signup
 ```
@@ -37,8 +37,9 @@ Response
   "modifiedDate": "2025-11-20T11:00:00"
 }
 ```
+---
 
-로그인
+### 로그인
 ```json
 
 POST /users/login
@@ -60,8 +61,9 @@ Response
   "message": "test님 로그인에 완료되었습니다."
 }
 ```
+---
 
-유저 조회
+### 유저 조회
 ```json
 GET /users/{userId}
 ```
@@ -77,8 +79,8 @@ Response
   "modifiedDate": "2025-11-20T11:10:00"
 }
 ```
-Schedule API
-일정 생성
+## Schedule API
+### 일정 생성
 ```json
 POST /schedules
 ```
@@ -103,7 +105,9 @@ Response
 }
 ```
 
-전체 일정 조회
+---
+
+### 전체 일정 조회
 ```json
 GET /schedules/all
 ```
@@ -118,8 +122,9 @@ Response
   }
 ]
 ```
+---
 
-특정 일정 조회
+### 특정 일정 조회
 ```json
 GET /schedules/{scheduleId}
 ```
@@ -135,7 +140,9 @@ Response
   "modifiedTime": "2025-11-20T11:30:00"
 }
 ```
-일정 수정
+---
+
+### 일정 수정
 ```json
 
 PUT /schedules/{scheduleId}
@@ -158,8 +165,10 @@ Response
   "content": "회의 내용 업데이트"
 }
 ```
-Comment API
-댓글 생성
+---
+
+## Comment API
+### 댓글 생성
 ```json
 POST /schedules/{scheduleId}/comments
 ```
@@ -181,8 +190,9 @@ Response
   "modifiedDate": "2025-11-20T11:45:00"
 }
 ```
+---
 
-댓글 조회
+### 댓글 조회
 ```json
 GET /schedules/{scheduleId}/comments
 ```
@@ -199,8 +209,9 @@ Response
   }
 ]
 ```
+---
 
-댓글 수정
+### 댓글 수정
 ```json
 PUT /comments/{commentId}
 ```
@@ -219,8 +230,9 @@ Response
   "content": "회의 시작 전 확인 완료"
 }
 ```
+---
 
-댓글 삭제
+### 댓글 삭제
 ```json
 DELETE /comments/{commentId}
 ```
@@ -232,11 +244,14 @@ Request
 }
 ```
 Response
-
+```json
 상태 코드 204 No Content
+```
 
+---
 
-3️⃣ 프로젝트 개요
+## 프로젝트 개요
+
 기술 스택: Spring Boot, JPA, MySQL/H2, Lombok, Jakarta Validation
 
 주요 기능:
@@ -251,14 +266,18 @@ Response
 
 예외 처리: GlobalExceptionHandler로 CustomException, Validation, 서버 예외 통합 처리
 
-4️⃣ 엔티티 구조
+---
+
+##  엔티티 구조
 엔티티	주요 필드	관계
 User	id, userName, email, password	1:N Schedule, 1:N Comment
 Schedule	id, title, content, user	1:N Comment
 Comment	id, content, user, schedule	-
 BaseEntity	createdDate, modifiedDate	공통 상속
 
-5️⃣ 공통 기능
+---
+
+##  공통 기능
 PasswordEncoder: BCrypt 해싱 및 검증
 
 SessionFilter: 세션 기반 로그인 체크
