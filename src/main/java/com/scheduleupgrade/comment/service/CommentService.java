@@ -87,8 +87,8 @@ public class CommentService {
             throw new CustomException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
+        //비밀번호 암호화 검증을 위한 유저 데이터 끌고오기
         User user = comment.getUser();
-
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
@@ -109,8 +109,8 @@ public class CommentService {
             throw new CustomException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
+        //비밀번호 암호화 검증을 위한 유저 데이터 끌고오기
         User user = comment.getUser();
-
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }

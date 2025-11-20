@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+//컨트롤러 넘어가기전에 인터셉트하여 로그인 관련 세션 검증하는 필터 기능 클래스
 @Component
 public class SessionFilter extends OncePerRequestFilter {
 

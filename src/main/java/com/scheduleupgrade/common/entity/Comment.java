@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
+    //속성
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,20 +24,14 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
+    //생성자
     public Comment(String content, User user, Schedule schedule) {
         this.content = content;
         this.user = user;
         this.schedule = schedule;
     }
 
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
+    //기능
     public void setContent(String content) {
         this.content = content;
     }

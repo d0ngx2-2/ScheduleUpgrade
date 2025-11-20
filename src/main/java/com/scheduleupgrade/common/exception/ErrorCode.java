@@ -3,6 +3,7 @@ package com.scheduleupgrade.common.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+//각 에러 발생 시 바디에 표시할 에러문구를 관리하는 Enum 클래스
 @Getter
 public enum ErrorCode {
 

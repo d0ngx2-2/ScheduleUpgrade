@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class User extends BaseEntity {
 
+    //속성
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,12 +23,14 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    //생성자
     public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
         this.password = password;
     }
 
+    //기능
     public void update(String userName, String email) {
         this.userName = userName;
         this.email = email;

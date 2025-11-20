@@ -96,8 +96,8 @@ public class ScheduleService {
             throw new CustomException(ErrorCode.SCHEDULE_FORBIDDEN);
         }
 
+        //비밀번호 암호화 검증을 위한 유저 데이터 끌고오기
         User user = schedule.getUser();
-
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
@@ -120,8 +120,8 @@ public class ScheduleService {
             throw new CustomException(ErrorCode.SCHEDULE_FORBIDDEN);
         }
 
+        //비밀번호 암호화 검증을 위한 유저 데이터 끌고오기
         User user = schedule.getUser();
-
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }

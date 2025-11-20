@@ -19,6 +19,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    //댓글 생성 기능
     @PostMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<CreateCommentResponse> create(
             @SessionAttribute(name = "loginUser") SessionUser sessionUser,
@@ -28,11 +29,13 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(request, sessionUser.getId(), scheduleId));
     }
 
+    //전체 댓글 조회 기능
     @GetMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<List<GetCommentResponse>> getAllComments(@PathVariable Long scheduleId) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getAll(scheduleId));
     }
 
+    //댓글 수정 기능
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<UpdateCommentResponse> updateComment(
             @SessionAttribute(name = "loginUser") SessionUser sessionUser,
@@ -44,6 +47,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(request, sessionUser.getId(), commentId, request.getPassword()));
     }
 
+    //댓글 삭제 기능
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @SessionAttribute(name = "loginUser") SessionUser sessionUser,
