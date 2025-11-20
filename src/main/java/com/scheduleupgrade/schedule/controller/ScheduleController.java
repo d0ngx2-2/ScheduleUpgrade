@@ -1,7 +1,7 @@
 package com.scheduleupgrade.schedule.controller;
 
-import com.scheduleupgrade.exception.CustomException;
-import com.scheduleupgrade.exception.ErrorCode;
+import com.scheduleupgrade.common.exception.CustomException;
+import com.scheduleupgrade.common.exception.ErrorCode;
 import com.scheduleupgrade.schedule.dto.*;
 import com.scheduleupgrade.schedule.service.ScheduleService;
 import com.scheduleupgrade.user.dto.SessionUser;
@@ -24,7 +24,8 @@ public class ScheduleController {
 
     //일정 생성
     @PostMapping("/schedules")
-    public ResponseEntity<CreateScheduleResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @Valid @RequestBody CreateScheduleRequest request) {
+    public ResponseEntity<CreateScheduleResponse> create(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+                                                         @Valid @RequestBody CreateScheduleRequest request) {
         if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
@@ -52,9 +53,9 @@ public class ScheduleController {
     //일정 수정
     @PutMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> update(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser
-            , @PathVariable Long scheduleId
-            , @Valid @RequestBody UpdateScheduleRequest request) {
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @PathVariable Long scheduleId,
+            @Valid @RequestBody UpdateScheduleRequest request) {
         if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
@@ -63,9 +64,9 @@ public class ScheduleController {
 
     //일정 삭제
     @DeleteMapping("/schedules/{scheduleId}")
-    public ResponseEntity<Void> delete(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser
-            , @PathVariable Long scheduleId
-            , @RequestBody DeleteScheduleRequest request) {
+    public ResponseEntity<Void> delete(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+                                       @PathVariable Long scheduleId,
+                                       @RequestBody DeleteScheduleRequest request) {
         if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }

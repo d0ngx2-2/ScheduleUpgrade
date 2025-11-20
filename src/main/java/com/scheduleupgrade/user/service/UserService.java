@@ -1,12 +1,12 @@
 package com.scheduleupgrade.user.service;
 
 import com.scheduleupgrade.comment.repository.CommentRepository;
-import com.scheduleupgrade.config.PasswordEncoder;
-import com.scheduleupgrade.exception.CustomException;
-import com.scheduleupgrade.exception.ErrorCode;
+import com.scheduleupgrade.common.config.PasswordEncoder;
+import com.scheduleupgrade.common.exception.CustomException;
+import com.scheduleupgrade.common.exception.ErrorCode;
 import com.scheduleupgrade.schedule.repository.ScheduleRepository;
 import com.scheduleupgrade.user.dto.*;
-import com.scheduleupgrade.user.entity.User;
+import com.scheduleupgrade.common.entity.User;
 import com.scheduleupgrade.user.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

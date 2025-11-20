@@ -1,6 +1,6 @@
 package com.scheduleupgrade.user.repository;
 
-import com.scheduleupgrade.user.entity.User;
+import com.scheduleupgrade.common.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

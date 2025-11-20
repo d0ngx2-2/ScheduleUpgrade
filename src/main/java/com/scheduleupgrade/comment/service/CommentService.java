@@ -1,17 +1,15 @@
 package com.scheduleupgrade.comment.service;
 
 import com.scheduleupgrade.comment.dto.*;
-import com.scheduleupgrade.comment.entity.Comment;
+import com.scheduleupgrade.common.entity.Comment;
 import com.scheduleupgrade.comment.repository.CommentRepository;
-import com.scheduleupgrade.config.PasswordEncoder;
-import com.scheduleupgrade.exception.CustomException;
-import com.scheduleupgrade.exception.ErrorCode;
-import com.scheduleupgrade.schedule.entity.Schedule;
+import com.scheduleupgrade.common.config.PasswordEncoder;
+import com.scheduleupgrade.common.exception.CustomException;
+import com.scheduleupgrade.common.exception.ErrorCode;
+import com.scheduleupgrade.common.entity.Schedule;
 import com.scheduleupgrade.schedule.repository.ScheduleRepository;
-import com.scheduleupgrade.schedule.service.ScheduleService;
-import com.scheduleupgrade.user.entity.User;
+import com.scheduleupgrade.common.entity.User;
 import com.scheduleupgrade.user.repository.UserRepository;
-import com.scheduleupgrade.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +28,9 @@ public class CommentService {
 
     //댓글 생성
     @Transactional
-    public CreateCommentResponse createComment(CreateCommentRequest request
-            , Long loginUserId
-            , Long scheduleId) {
+    public CreateCommentResponse createComment(CreateCommentRequest request,
+                                               Long loginUserId,
+                                               Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
@@ -77,10 +75,10 @@ public class CommentService {
 
     //댓글 수정
     @Transactional
-    public UpdateCommentResponse updateComment(UpdateCommentRequest request
-            , Long loginUserId
-            , Long scheduleId
-            , String password) {
+    public UpdateCommentResponse updateComment(UpdateCommentRequest request,
+                                               Long loginUserId,
+                                               Long scheduleId,
+                                               String password) {
         Comment comment = commentRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.COMMENT_NOT_FOUND)
         );

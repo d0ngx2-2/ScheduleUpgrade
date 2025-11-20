@@ -1,6 +1,5 @@
-package com.scheduleupgrade.exception;
+package com.scheduleupgrade.common.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

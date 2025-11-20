@@ -1,7 +1,7 @@
 package com.scheduleupgrade.user.controller;
 
-import com.scheduleupgrade.exception.CustomException;
-import com.scheduleupgrade.exception.ErrorCode;
+import com.scheduleupgrade.common.exception.CustomException;
+import com.scheduleupgrade.common.exception.ErrorCode;
 import com.scheduleupgrade.user.dto.*;
 import com.scheduleupgrade.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -60,7 +60,9 @@ public class UserController {
 
     //수정 기능
     @PutMapping("/users/{userId}")
-    public ResponseEntity<UpdateUserResponse> updateUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<UpdateUserResponse> updateUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+                                                         @PathVariable Long userId,
+                                                         @Valid @RequestBody UpdateUserRequest request) {
         if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }
@@ -69,7 +71,9 @@ public class UserController {
 
     //삭제 기능
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser, @PathVariable Long userId, @Valid @RequestBody DeleteUserRequest request) {
+    public ResponseEntity<Void> deleteUser(@SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+                                           @PathVariable Long userId,
+                                           @Valid @RequestBody DeleteUserRequest request) {
         if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);
         }

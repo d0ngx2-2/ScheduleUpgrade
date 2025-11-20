@@ -2,8 +2,8 @@ package com.scheduleupgrade.comment.controller;
 
 import com.scheduleupgrade.comment.dto.*;
 import com.scheduleupgrade.comment.service.CommentService;
-import com.scheduleupgrade.exception.CustomException;
-import com.scheduleupgrade.exception.ErrorCode;
+import com.scheduleupgrade.common.exception.CustomException;
+import com.scheduleupgrade.common.exception.ErrorCode;
 import com.scheduleupgrade.user.dto.SessionUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ public class CommentController {
 
     @PostMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<CreateCommentResponse> create(
-            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser
-            , @PathVariable Long scheduleId,
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            @PathVariable Long scheduleId,
             @Valid @RequestBody CreateCommentRequest request) {
         if (sessionUser == null) {
             throw new CustomException(ErrorCode.USER_UNAUTHORIZED);

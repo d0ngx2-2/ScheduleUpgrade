@@ -1,13 +1,13 @@
 package com.scheduleupgrade.schedule.service;
 
 import com.scheduleupgrade.comment.repository.CommentRepository;
-import com.scheduleupgrade.config.PasswordEncoder;
-import com.scheduleupgrade.exception.CustomException;
-import com.scheduleupgrade.exception.ErrorCode;
+import com.scheduleupgrade.common.config.PasswordEncoder;
+import com.scheduleupgrade.common.exception.CustomException;
+import com.scheduleupgrade.common.exception.ErrorCode;
 import com.scheduleupgrade.schedule.dto.*;
-import com.scheduleupgrade.schedule.entity.Schedule;
+import com.scheduleupgrade.common.entity.Schedule;
 import com.scheduleupgrade.schedule.repository.ScheduleRepository;
-import com.scheduleupgrade.user.entity.User;
+import com.scheduleupgrade.common.entity.User;
 import com.scheduleupgrade.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -83,10 +83,10 @@ public class ScheduleService {
 
     //일정 수정
     @Transactional
-    public UpdateScheduleResponse update(Long scheduleId
-            , UpdateScheduleRequest request
-            , Long loginUserId
-            , String password
+    public UpdateScheduleResponse update(Long scheduleId,
+                                         UpdateScheduleRequest request,
+                                         Long loginUserId,
+                                         String password
     ) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
@@ -132,10 +132,11 @@ public class ScheduleService {
     }
 
     //일정 페이징 조회
+    @Transactional
     public Page<GetPageScheduleResponse> getPage(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()
-                , pageable.getPageSize()
-                , Sort.by(Sort.Direction.DESC, "lastModifiedDate")
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "lastModifiedDate")
         );
 
         Page<Schedule> schedules = scheduleRepository.findAll(pageRequest);

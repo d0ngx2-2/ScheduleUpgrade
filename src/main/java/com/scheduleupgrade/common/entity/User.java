@@ -1,4 +1,4 @@
-package com.scheduleupgrade.user.entity;
+package com.scheduleupgrade.common.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
 @Getter
-@EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +25,6 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
-    @CreatedDate
-    private LocalDateTime createdDate;
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
 
     public User(String userName, String email, String password) {
         this.userName = userName;

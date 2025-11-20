@@ -1,4 +1,4 @@
-package com.scheduleupgrade.exception;
+package com.scheduleupgrade.common.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
